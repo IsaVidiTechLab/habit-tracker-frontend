@@ -67,7 +67,7 @@ function AddArea({ storedToken, editingArea, setEditingArea, areas, setAreas, tr
                 onChange={(e) => setAreaName(e.target.value)}
                 className="px-3 py-2 border text-gray-700 border-gray-100 rounded-lg mr-4 text-sm w-48"
             />
-            <button type="submit" className=" justify-center rounded-md px-3 py-2 text-sm font-normal opacity-70 hover:opacity-100 bg-[#EEA5A6]  leading-6  text-white">
+            <button type="submit" className=" justify-center rounded-md px-3 py-2 text-sm font-normal opacity-70 hover:opacity-100 bg-[#8E7AB5]  leading-6  text-white">
                 {editingArea ? "Update Area" : "Add Area"}
             </button>
         </form>

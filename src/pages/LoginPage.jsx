@@ -85,7 +85,7 @@ function LoginPage(props) {
             <div>
               <button
                 type="submit"
-                className="flex w-full justify-center rounded-md px-3 py-2 text-sm font-semibold leading-6 shadow-lg hover:bg-[#8E7AB5] hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 border  border- hover:border-transparent "
+                className="flex w-full justify-center rounded-md px-3 py-2 text-sm font-semibold leading-6 shadow-lg hover:bg-[#8E7AB5] bg-[#8E7AB5] hover:opacity-100 opacity-80 text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 border  border- hover:border-transparent "
               >
                 Sign in
               </button>

@@ -1,0 +1,18 @@
+@keyframes fillBackground {
+    0% {
+        background-size: 0% 100%;
+    }
+    100% {
+        background-size: 100% 100%;
+    }
+}
+
+.card {
+    background: linear-gradient(to right, var(--habit-color) 100%, transparent 100%);
+    background-size: 0% 100%;
+    transition: background-size 5s ease;
+}
+
+.card.fill {
+    animation: fillBackground 5s forwards;
+}

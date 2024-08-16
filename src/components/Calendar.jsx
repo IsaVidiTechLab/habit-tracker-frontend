@@ -1,10 +1,8 @@
 import React, { useState } from 'react';
 import '../style/calendar.css';
 
-const Calendar = () => {
+const Calendar = ({selectedDate, setSelectedDate}) => {
     const today = new Date();
-    const [selectedDate, setSelectedDate] = useState(null);
-  
     const getFormattedDate = (date) => {
       return date.getDate();
     };

@@ -1,12 +1,18 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Calendar from '../components/Calendar'
 import nodata from '../assets/no-data.png'
+import AllHabits from '../components/AllHabits'
 
 function HomePage() {
+
+  const today = new Date();
+  const [selectedDate, setSelectedDate] = useState(today);
+  
+
   return (
     <div className='flex flex-col justify-center '>
-      <Calendar />
-      <img src={nodata} width={200} height={200} className='mt-16 self-center'/>
+      <Calendar selectedDate={selectedDate} setSelectedDate={setSelectedDate}/>
+      <AllHabits selectedDate = {selectedDate}/>
     </div>
   )
 }

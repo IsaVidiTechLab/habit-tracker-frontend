@@ -8,7 +8,6 @@ function HomePage() {
   const today = new Date();
   const [selectedDate, setSelectedDate] = useState(today);
   
-
   return (
     <div className='flex flex-col justify-center '>
       <Calendar selectedDate={selectedDate} setSelectedDate={setSelectedDate}/>

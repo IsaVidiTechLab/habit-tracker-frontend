@@ -7,6 +7,8 @@ import { Routes, Route } from "react-router-dom";
 import HomePage from "./pages/HomePage";
 import AreasPage from "./pages/AreasPage";
 import Header from "./components/Header";
+import HabitPage from "./pages/HabitPage";
+
 function App() {
   return (
     <>
@@ -44,6 +46,10 @@ function App() {
                 <AreasPage />
               </IsPrivate>
             }
+          />
+          <Route path="/habits" element={<IsPrivate>
+            <HabitPage />
+          </IsPrivate>}
           />
         </Routes>
       </div>

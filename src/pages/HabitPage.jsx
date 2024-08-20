@@ -1,17 +1,33 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import AddHabit from '../components/AddHabit';
 import HabitsList from '../components/HabitsList';
 
 function HabitPage() {
-
     const storedToken = localStorage.getItem("authToken");
     const [editingHabit, setEditingHabit] = useState(null);
-    const [refreshKey, setRefreshKey] = useState(0);
+    const [habits, setHabits] = useState([]);
+    const API_URL = import.meta.env.VITE_API_URL;
 
-    const triggerRefresh = () => {
-        setRefreshKey(prevKey => prevKey + 1);
+    const fetchHabits = async () => {
+        try {
+            const response = await axios.get(`${API_URL}/api/habits`, {
+                headers: { Authorization: `Bearer ${storedToken}` }
+            });
+            setHabits(response.data.reverse());
+        } catch (error) {
+            console.log("Error fetching habits:", error);
+        }
     };
-    
+
+    useEffect(() => {
+        fetchHabits();
+    }, [API_URL, storedToken]);
+
+    const handleHabitAdded = async () => {
+        await fetchHabits(); // Refetch habits after adding a new one
+    };
+
     const handleEdit = (habit) => {
         setEditingHabit(habit);
     };
@@ -24,12 +40,15 @@ function HabitPage() {
                     storedToken={storedToken} 
                     editingHabit={editingHabit} 
                     setEditingHabit={setEditingHabit} 
-                    triggerRefresh={triggerRefresh}
+                    habits={habits}
+                    setHabits={setHabits}
+                    onHabitAdded={handleHabitAdded}
                 />
                 <HabitsList 
                     storedToken={storedToken} 
                     onEdit={handleEdit} 
-                    refreshKey={refreshKey}  
+                    habits={habits}
+                    setHabits={setHabits}
                 />
             </div>
         </div>

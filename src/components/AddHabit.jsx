@@ -1,8 +1,16 @@
 import React, { useEffect, useState, useContext } from 'react';
 import axios from 'axios';
 import { AuthContext } from "../context/auth.context";
+import AppleEmoji from '../assets/apple-emoji.png';
+import BicepEmoji from '../assets/bicep-emoji.png';
+import BookEmoji from '../assets/book-emoji.png';
+import MoonEmoji from '../assets/moon-emoji.png';
+import RelaxEmoji from '../assets/relax-emoji.png';
+import SmileEmoji from '../assets/smile-emoji.png';
+import WineEmoji from '../assets/wine-emoji.png';
 
-function AddHabit({ storedToken, editingHabit, setEditingHabit, habits, setHabits, triggerRefresh }) {
+
+function AddHabit({ storedToken, editingHabit, setEditingHabit, habits, setHabits, onHabitAdded }) {
 
     const API_URL = import.meta.env.VITE_API_URL;
     const { user } = useContext(AuthContext);
@@ -15,8 +23,16 @@ function AddHabit({ storedToken, editingHabit, setEditingHabit, habits, setHabit
     const [selectedArea, setSelectedArea] = useState("");
     const [areaId, setAreaId] = useState("");
 
-    const availableColors = ["#FF5731", "#2257FF", "#F333FF", "#FFBD33", "#33FFD4", "#FF3213", "#33FF33", "#3333FF"];
-    const availableIcons = ["🍎", "🏋️‍♂️", "🎨", "📚", "🍷", "🌿", "🌙"];
+    const availableColors = ["#8E7AB5" , "#B784B7", "#E493B3", "#EEA5A6", "#FAB38E", "#FFD88A", "#FFD88A"];
+    const availableIcons = [
+        { src: AppleEmoji, alt: "Apple" },
+        { src: BicepEmoji, alt: "Bicep" },
+        { src: BookEmoji, alt: "Book" },
+        { src: MoonEmoji, alt: "Moon" },
+        { src: RelaxEmoji, alt: "Relax" },
+        { src: SmileEmoji, alt: "Smile" },
+        { src: WineEmoji, alt: "Wine" }
+    ];
 
     useEffect(() => {
         const fetchAreas = () => {
@@ -63,7 +79,7 @@ function AddHabit({ storedToken, editingHabit, setEditingHabit, habits, setHabit
             name,
             description,
             color,
-            icon,
+            icon, // This should store the URL of the image
             userId: user._id,
             areaId
         };
@@ -81,9 +97,9 @@ function AddHabit({ storedToken, editingHabit, setEditingHabit, habits, setHabit
                 const response = await axios.post(`${API_URL}/api/habits`, requestBody, {
                     headers: { Authorization: `Bearer ${storedToken}` },
                 });
-                setHabits([...habits, response.data]);
-                triggerRefresh();  // This triggers the refresh after a habit is added
+                setHabits([...habits, response.data]); 
                 console.log("New Habit:", response.data);
+                onHabitAdded(); 
             }
         } catch (error) {
             console.log(error);
@@ -129,14 +145,13 @@ function AddHabit({ storedToken, editingHabit, setEditingHabit, habits, setHabit
                 <label className="block text-sm font-medium text-gray-700">Select Icon:</label>
                 <div className="flex space-x-2 mt-2">
                     {availableIcons.map((availableIcon) => (
-                        <button
-                            key={availableIcon}
-                            type="button"
-                            className={`px-2 py-1 border rounded-full cursor-pointer ${icon === availableIcon ? 'ring-2 ring-blue-500' : ''}`}
-                            onClick={() => setIcon(availableIcon)}
-                        >
-                            {availableIcon}
-                        </button>
+                        <img
+                            key={availableIcon.alt}
+                            src={availableIcon.src}
+                            alt={availableIcon.alt}
+                            className={`w-10 h-10 p-2 rounded-full cursor-pointer ${icon === availableIcon.src ? 'ring-2 ring-blue-500' : ''}`}
+                            onClick={() => setIcon(availableIcon.src)}
+                        />
                     ))}
                 </div>
             </div>

@@ -2,23 +2,11 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { FaEdit, FaTrash } from 'react-icons/fa';
 
-function HabitsList({ storedToken, onEdit, refreshKey }) {
+function HabitsList({ storedToken, onEdit, habits, setHabits }) {
     const API_URL = import.meta.env.VITE_API_URL;
-    const [habits, setHabits] = useState([]);
     const [areas, setAreas] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [itemsPerPage] = useState(5);
-
-    const fetchHabits = async () => {
-        try {
-            const response = await axios.get(`${API_URL}/api/habits`, {
-                headers: { Authorization: `Bearer ${storedToken}` }
-            });
-            setHabits(response.data.reverse());
-        } catch (error) {
-            console.log(error);
-        }
-    };
 
     const fetchAreas = async () => {
         try {
@@ -35,16 +23,12 @@ function HabitsList({ storedToken, onEdit, refreshKey }) {
         fetchAreas();
     }, [API_URL, storedToken]);
 
-    useEffect(() => {
-        fetchHabits();
-    }, [API_URL, storedToken, refreshKey]);
-
     const handleDelete = async (id) => {
         try {
             await axios.delete(`${API_URL}/api/habits/${id}`, {
                 headers: { Authorization: `Bearer ${storedToken}` },
             });
-            onEdit(); 
+            setHabits(habits.filter(habit => habit._id !== id)); // Remove the deleted habit
         } catch (error) {
             console.log(error);
         }
@@ -79,7 +63,11 @@ function HabitsList({ storedToken, onEdit, refreshKey }) {
                     >  
                         <div className='flex justify-between items-center'>
                             <div className='flex items-start'>
-                                <span className='text-2xl mr-5 self-center'>{habit.icon}</span>
+                                <img 
+                                    src={habit.icon} 
+                                    alt="icon" 
+                                    className='w-8 h-8 mr-5 self-center'
+                                />
                                 <div className='flex flex-col'>
                                     <p className='font-bold text-gray-700'>{habit.name}</p>
                                     <p className='text-gray-700 pr-2'><b>Description:</b> {habit.description}</p>

@@ -88,9 +88,7 @@ function AllHabits({ selectedDate }) {
               key={habit._id}
               className="flex flex-row justify-between border border-gray-200 shadow-sm rounded-xl p-4 md:p-5 text-center items-center align-middle gap-16"
               style={{
-                backgroundColor: doneHabits[habit._id]
-                  ? habit.color 
-                  : '#f3e8ff', 
+                backgroundColor: doneHabits[habit._id] ? habit.color : `${habit.color}50`, 
               }}
             >
               <div className="flex flex-row gap-8">

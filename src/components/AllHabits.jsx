@@ -12,7 +12,7 @@ function AllHabits({ selectedDate }) {
 
    
     const [currentPage, setCurrentPage] = useState(1);
-    const itemsPerPage = 5; 
+    const itemsPerPage = 3; 
 
     useEffect(() => {
         fetchHabitsAndCompletion();
@@ -83,7 +83,7 @@ function AllHabits({ selectedDate }) {
         }
     };
 
-    // Pagination logic
+
     const indexOfLastHabit = currentPage * itemsPerPage;
     const indexOfFirstHabit = indexOfLastHabit - itemsPerPage;
     const currentHabits = habits.slice(indexOfFirstHabit, indexOfLastHabit);
@@ -131,7 +131,7 @@ function AllHabits({ selectedDate }) {
                 <img src={Nodata} alt="No habits found for this date." />
             )}
 
-            {/* Pagination Controls */}
+
             {habits.length > itemsPerPage && (
                 <div className='flex justify-center mt-4'>
                     {Array.from({ length: totalPages }, (_, index) => (

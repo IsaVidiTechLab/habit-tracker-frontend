@@ -1,11 +1,12 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Doughnut } from 'react-chartjs-2';
 import { Chart, ArcElement, Tooltip, Legend } from 'chart.js';
 
 Chart.register(ArcElement, Tooltip, Legend);
 
 function CompletionChart({ percentage }) {
-  const data = {
+  // Use useMemo to ensure the data object is recalculated when percentage changes
+  const data = useMemo(() => ({
     labels: ['Completed', 'Incomplete'],
     datasets: [
       {
@@ -14,7 +15,7 @@ function CompletionChart({ percentage }) {
         hoverBackgroundColor: ['#9c8abe', '#b9add1'],
       },
     ],
-  };
+  }), [percentage]);
 
   const options = {
     cutout: '70%',

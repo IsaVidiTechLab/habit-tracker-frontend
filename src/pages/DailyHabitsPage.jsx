@@ -12,10 +12,10 @@ function DailyHabitsPage() {
   const storedToken = localStorage.getItem("authToken");
 
   useEffect(() => {
-    fetchMonthlyCompletionPercentage();
+    fetchMonthlyCompletionPercentage(date);
   }, [date]);
 
-  const fetchMonthlyCompletionPercentage = async () => {
+  const fetchMonthlyCompletionPercentage = async (selectedDate) => {
     try {
       const habitResponse = await axios.get(`${API_URL}/api/habits`, {
         headers: { Authorization: `Bearer ${storedToken}` }
@@ -25,10 +25,9 @@ function DailyHabitsPage() {
         headers: { Authorization: `Bearer ${storedToken}` }
       });
 
-      const currentMonth = new Date(date).getMonth();
-      const currentYear = new Date(date).getFullYear();
+      const currentMonth = new Date(selectedDate).getMonth();
+      const currentYear = new Date(selectedDate).getFullYear();
 
-      // Filter to get only the habits for the selected month
       const monthlyHabits = dailyHabitsResponse.data.filter(dailyHabit => {
         const habitDate = new Date(dailyHabit.date);
         return (
@@ -37,20 +36,21 @@ function DailyHabitsPage() {
         );
       });
 
-      // Total number of habits expected in the month
       const totalDaysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
       const totalHabitsForMonth = habitResponse.data.length * totalDaysInMonth;
 
-      // Count the completed habits for the month
       const completedHabitsForMonth = monthlyHabits.filter(dailyHabit => dailyHabit.completion).length;
 
-      // Calculate the percentage
       const percentage = totalHabitsForMonth > 0 ? (completedHabitsForMonth / totalHabitsForMonth) * 100 : 0;
       setMonthlyCompletionPercentage(percentage);
 
     } catch (error) {
       console.error("Error fetching monthly completion stats:", error);
     }
+  };
+
+  const handleMonthChange = ({ activeStartDate }) => {
+    setDate(activeStartDate);
   };
 
   return (
@@ -60,6 +60,7 @@ function DailyHabitsPage() {
         <Calendar
           onChange={setDate}
           value={date}
+          onActiveStartDateChange={handleMonthChange} // Triggered when the month changes
           tileClassName={({ date, view }) =>
             date.toDateString() === new Date().toDateString() ? 'highlight' : null
           }

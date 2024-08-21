@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import CompletionChart from './CompletionChart';
 import Nodata from '../assets/no-data.png';
-import { FaCheck } from "react-icons/fa";
 
 function AllHabits({ selectedDate }) {
     const API_URL = import.meta.env.VITE_API_URL;
@@ -11,7 +10,7 @@ function AllHabits({ selectedDate }) {
     const [doneHabits, setDoneHabits] = useState({});
     const [completionPercentage, setCompletionPercentage] = useState(0);
 
-
+   
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 5; 
 
@@ -31,8 +30,8 @@ function AllHabits({ selectedDate }) {
             });
 
             const doneHabitsMap = dailyHabitsResponse.data.reduce((acc, dailyHabit) => {
-                if (new Date(dailyHabit.date).toDateString() === new Date(selectedDate).toDateString() && dailyHabit.completion) {
-                    acc[dailyHabit.habitId] = true;
+                if (new Date(dailyHabit.date).toDateString() === new Date(selectedDate).toDateString()) {
+                    acc[dailyHabit.habitId] = dailyHabit.completion;
                 }
                 return acc;
             }, {});
@@ -40,7 +39,7 @@ function AllHabits({ selectedDate }) {
             setDoneHabits(doneHabitsMap);
 
             const totalHabits = habitResponse.data.length;
-            const completedHabits = Object.keys(doneHabitsMap).length;
+            const completedHabits = Object.values(doneHabitsMap).filter(Boolean).length;
             const percentage = totalHabits > 0 ? (completedHabits / totalHabits) * 100 : 0;
             setCompletionPercentage(percentage);
 
@@ -49,11 +48,13 @@ function AllHabits({ selectedDate }) {
         }
     };
 
-    const handleDailyHabits = async (habitId, userId, habitColor) => {
+    const toggleCompletion = async (habitId, userId) => {
+        const isCompleted = doneHabits[habitId];
+
         const requestBody = {
             userId: userId,
             habitId: habitId,
-            completion: true,
+            completion: !isCompleted, 
             date: selectedDate
         };
 
@@ -66,23 +67,23 @@ function AllHabits({ selectedDate }) {
                 }
             );
 
-            console.log("New DailyHabit:", response.data);
+            console.log("Updated DailyHabit:", response.data);
 
             setDoneHabits((prev) => ({
                 ...prev,
-                [habitId]: true,
+                [habitId]: !isCompleted, 
             }));
 
             const totalHabits = habits.length;
-            const completedHabits = Object.keys(doneHabits).length + 1;
+            const completedHabits = Object.values(doneHabits).filter(Boolean).length + (!isCompleted ? 1 : -1);
             const percentage = totalHabits > 0 ? (completedHabits / totalHabits) * 100 : 0;
             setCompletionPercentage(percentage);
         } catch (error) {
-            console.error("Error posting daily habit:", error);
+            console.error("Error updating daily habit:", error);
         }
     };
 
-
+    // Pagination logic
     const indexOfLastHabit = currentPage * itemsPerPage;
     const indexOfFirstHabit = indexOfLastHabit - itemsPerPage;
     const currentHabits = habits.slice(indexOfFirstHabit, indexOfLastHabit);
@@ -109,12 +110,20 @@ function AllHabits({ selectedDate }) {
                                 <img src={habit.icon} width="24" alt="" />
                                 <p className='font-semibold'>{habit.name}</p>
                             </div>
-                            <button
-                                className='text-green-600 hover:text-green-800'
-                                onClick={() => { handleDailyHabits(habit._id, habit.userId, habit.color); }}
-                            >
-                                <FaCheck />
-                            </button>
+                            <div>
+                                <label className="relative inline-flex items-center cursor-pointer">
+                                    <input
+                                        type="checkbox"
+                                        className="sr-only peer"
+                                        checked={doneHabits[habit._id] || false}
+                                        onChange={() => toggleCompletion(habit._id, habit.userId)}
+                                    />
+                                    <div className="w-11 h-6 bg-gray-500 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300
+                                     dark:peer-focus:ring-green-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full
+                                      peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white
+                                       after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-800"></div>
+                                </label>
+                            </div>
                         </div>
                     ))}
                 </div>
@@ -122,7 +131,7 @@ function AllHabits({ selectedDate }) {
                 <img src={Nodata} alt="No habits found for this date." />
             )}
 
-        
+            {/* Pagination Controls */}
             {habits.length > itemsPerPage && (
                 <div className='flex justify-center mt-4'>
                     {Array.from({ length: totalPages }, (_, index) => (

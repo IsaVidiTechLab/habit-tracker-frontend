@@ -8,6 +8,7 @@ import HomePage from "./pages/HomePage";
 import AreasPage from "./pages/AreasPage";
 import Header from "./components/Header";
 import HabitPage from "./pages/HabitPage";
+import DailyHabitsPage from "./pages/DailyHabitsPage";
 
 function App() {
   return (
@@ -49,6 +50,10 @@ function App() {
           />
           <Route path="/habits" element={<IsPrivate>
             <HabitPage />
+          </IsPrivate>}
+          />
+          <Route path="/dailyhabits" element={<IsPrivate>
+            <DailyHabitsPage />
           </IsPrivate>}
           />
         </Routes>

@@ -8,6 +8,8 @@ import MoonEmoji from '../assets/moon-emoji.png';
 import RelaxEmoji from '../assets/relax-emoji.png';
 import SmileEmoji from '../assets/smile-emoji.png';
 import WineEmoji from '../assets/wine-emoji.png';
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 
 function AddHabit({ storedToken, editingHabit, setEditingHabit, habits, setHabits, onHabitAdded }) {
@@ -43,6 +45,7 @@ function AddHabit({ storedToken, editingHabit, setEditingHabit, habits, setHabit
                 })
                 .catch((error) => {
                     console.log(error);
+                    toast.error('Failed to load areas. Please try again later.');
                 });
         }
         fetchAreas();
@@ -73,8 +76,33 @@ function AddHabit({ storedToken, editingHabit, setEditingHabit, habits, setHabit
         setEditingHabit(null);
     }
 
+    const handleValidation = () => {
+        if (!name.trim()) {
+            toast.error('Habit name is required.');
+            return false;
+        }
+        if (!color) {
+            toast.error('Please select a color.');
+            return false;
+        }
+        if (!icon) {
+            toast.error('Please select an icon.');
+            return false;
+        }
+        if (!areaId) {
+            toast.error('Please select an area.');
+            return false;
+        }
+        return true;
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        if (!handleValidation()) {
+            return; 
+        }
+
         const requestBody = {
             name,
             description,
@@ -93,16 +121,19 @@ function AddHabit({ storedToken, editingHabit, setEditingHabit, habits, setHabit
                     habit._id === editingHabit._id ? response.data : habit
                 );
                 setHabits(updatedHabits);
+                toast.success('Habit updated successfully!');
             } else {
                 const response = await axios.post(`${API_URL}/api/habits`, requestBody, {
                     headers: { Authorization: `Bearer ${storedToken}` },
                 });
                 setHabits([...habits, response.data]); 
                 console.log("New Habit:", response.data);
+                toast.success('Habit added successfully!');
                 onHabitAdded(); 
             }
         } catch (error) {
             console.log(error);
+            toast.error(`Failed to ${editingHabit ? "update" : "add"} habit. Please try again.`);
         }
 
         clearFields();

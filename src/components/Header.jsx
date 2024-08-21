@@ -18,12 +18,12 @@ function Header() {
     <div>
       {isLoggedIn && (
         <header>
-          <nav className="border-gray-200 px-4 lg:px-6 py-2.5 bg-[#B784B7]">
+          <nav className="border-gray-200 px-4 lg:px-6 py-1 bg-[#B784B7]">
             <div className="flex flex-wrap justify-between items-center mx-auto max-w-screen-xl">
               <Link to="/" className="flex items-center">
                 <img
                   src="public/logo-habit-tracker.png"
-                  className="mr-3 w-auto h-20"
+                  className="mr-3 w-auto h-16"
                   alt="Logo"
                 />
               </Link>
@@ -82,7 +82,7 @@ function Header() {
                 } justify-between items-center w-full lg:flex lg:w-auto lg:order-1`}
                 id="mobile-menu"
               >
-                <ul className="flex flex-col my-4 font-medium lg:flex-row lg:space-x-8 lg:mt-0 gap-1">
+                <ul className="flex flex-col  font-medium lg:flex-row lg:space-x-8 lg:mt-0 gap-1">
                   <li>
                     <Link
                       to="/"

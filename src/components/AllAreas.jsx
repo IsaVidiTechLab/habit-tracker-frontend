@@ -1,6 +1,8 @@
 import axios from 'axios';
 import React, { useEffect } from 'react';
 import { FaEdit, FaTrash } from 'react-icons/fa';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function AllAreas({ storedToken, onEdit, areas, setAreas, refreshKey }) {
     const API_URL = import.meta.env.VITE_API_URL;
@@ -13,6 +15,7 @@ function AllAreas({ storedToken, onEdit, areas, setAreas, refreshKey }) {
             setAreas(response.data);
         } catch (error) {
             console.error('Error fetching areas:', error);
+            toast.error('Failed to load areas. Please try again later.');
         }
     };
 
@@ -21,13 +24,18 @@ function AllAreas({ storedToken, onEdit, areas, setAreas, refreshKey }) {
     }, [storedToken, refreshKey]);
 
     const handleDelete = async (id) => {
+        const confirmDelete = window.confirm('Are you sure you want to delete this area?');
+        if (!confirmDelete) return;
+
         try {
             await axios.delete(`${API_URL}/api/areas/${id}`, {
                 headers: { Authorization: `Bearer ${storedToken}` },
             });
             fetchAreas();
+            toast.success('Area deleted successfully!');
         } catch (error) {
-            console.error('Area not deleted:', error);
+            console.error('Error deleting area:', error);
+            toast.error('Failed to delete area. Please try again.');
         }
     };
 
@@ -36,6 +44,7 @@ function AllAreas({ storedToken, onEdit, areas, setAreas, refreshKey }) {
     };
 
     return (
+        <>
         <div>
             <ul className='flex flex-col text-sm'>
                 {areas.map((area) => (
@@ -49,6 +58,8 @@ function AllAreas({ storedToken, onEdit, areas, setAreas, refreshKey }) {
                 ))}
             </ul>
         </div>
+       
+        </>
     );
 }
 

@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -22,10 +24,14 @@ function SignUpPage(props) {
     axios
       .post(`${API_URL}/auth/signup`, requestBody)
       .then((response) => {
+        toast.success("Signed Up SuccessFully !!");
         navigate("/login");
       })
       .catch((error) => {
         console.log(error.response.data);
+        const errorDescription = error.response.data.message;
+        console.log(errorDescription);
+        toast.warn(errorDescription);
       });
   };
 

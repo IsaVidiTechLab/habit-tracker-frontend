@@ -2,6 +2,8 @@ import { useState, useContext } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/auth.context";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -24,11 +26,13 @@ function LoginPage(props) {
       .then((response) => {
         storeToken(response.data.authToken);
         authenticateUser();
+        toast.success("Login SuccessFully !!");
         navigate("/");
       })
       .catch((error) => {
         const errorDescription = error.response.data.message;
         console.log(errorDescription);
+        toast.warn(errorDescription);
       });
   };
 

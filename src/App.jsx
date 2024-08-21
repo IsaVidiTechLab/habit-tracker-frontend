@@ -8,6 +8,7 @@ import HomePage from "./pages/HomePage";
 import AreasPage from "./pages/AreasPage";
 import Header from "./components/Header";
 import HabitPage from "./pages/HabitPage";
+import { ToastContainer } from "react-toastify";
 import DailyHabitsPage from "./pages/DailyHabitsPage";
 
 function App() {
@@ -57,6 +58,17 @@ function App() {
           </IsPrivate>}
           />
         </Routes>
+        <ToastContainer
+            position="top-right" 
+            autoClose={3000} 
+            hideProgressBar={false} 
+            newestOnTop={false} 
+            closeOnClick 
+            rtl={false} 
+            pauseOnFocusLoss 
+            draggable 
+            pauseOnHover  
+            />
       </div>
     </>
   );

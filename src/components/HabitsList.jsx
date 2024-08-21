@@ -1,6 +1,8 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { FaEdit, FaTrash } from 'react-icons/fa';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function HabitsList({ storedToken, onEdit, habits, setHabits }) {
     const API_URL = import.meta.env.VITE_API_URL;
@@ -24,13 +26,17 @@ function HabitsList({ storedToken, onEdit, habits, setHabits }) {
     }, [API_URL, storedToken]);
 
     const handleDelete = async (id) => {
+        const confirmDelete = window.confirm('Are you sure you want to delete this Habit?');
+        if (!confirmDelete) return;
         try {
             await axios.delete(`${API_URL}/api/habits/${id}`, {
                 headers: { Authorization: `Bearer ${storedToken}` },
             });
             setHabits(habits.filter(habit => habit._id !== id)); // Remove the deleted habit
+            toast.success('Habit deleted successfully!');
         } catch (error) {
             console.log(error);
+            toast.error('Failed to delete Habit. Please try again.');
         }
     };
 
